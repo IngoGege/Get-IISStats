@@ -4,7 +4,7 @@
 
 Created by: https://ingogegenwarth.wordpress.com/
 Version:    42 ("What do you get if you multiply six by nine?")
-Changed:    13.06.2017
+Changed:    10.06.2020
 
 .LINK
 https://ingogegenwarth.wordpress.com/2015/02/14/troubleshooting-exchange-with-logparseriis-logs-1/
@@ -303,7 +303,7 @@ Function GetExchServer {
     param([array]$Roles,[string[]]$ADSites
         )
     Process {
-        $valid = @("2","4","16","20","32","36","38","54","64","16385","16439")
+        $valid = @("2","4","16","20","32","36","38","54","64","16385","16439","16423")
         ForEach ($Role in $Roles){
             If (!($valid -contains $Role)) {
                 Write-Output "Please use the following numbers: MBX=2,CAS=4,UM=16,HT=32,Edge=64 multirole servers:CAS/HT=36,CAS/MBX/HT=38,CAS/UM=20,E2k13 MBX=54,E2K13 CAS=16385,E2k13 CAS/MBX=16439"
@@ -379,12 +379,12 @@ function buildstamp {
 If (([string]::IsNullOrEmpty($Localpath)) -and ([string]::IsNullOrEmpty($SpecifiedServers))) {
     If ($Exchange2013Only) {
         # get CAS servers
-        [array]$servers2013 = GetExchServer -Role 54,16385,16439 -ADSites $ADSite
+        [array]$servers2013 = GetExchServer -Role 54,16385,16439,16423 -ADSites $ADSite
     }
     Else {
         # get CAS servers
         [array]$servers = GetExchServer -Role 4,20,36,38 -ADSites $ADSite
-        [array]$servers2013 = GetExchServer -Role 54,16385,16439 -ADSites $ADSite
+        [array]$servers2013 = GetExchServer -Role 54,16385,16439,16423 -ADSites $ADSite
     }
 }
 
@@ -416,7 +416,7 @@ $logs = $null
 
 If ($Servers -or $Servers2013) {
     Write-Output "Found the following Exchange 2010 servers:" $($Servers | %{$_.Properties.name})
-    Write-Output "Found the following Exchange 2013/2016 servers:" $($Servers2013 | %{$_.Properties.name})
+    Write-Output "Found the following Exchange 2013/2016/2019 servers:" $($Servers2013 | %{$_.Properties.name})
 }
 ElseIf ($SpecifiedServers) {
     Write-Output "You specified the following servers:" $SpecifiedServers
